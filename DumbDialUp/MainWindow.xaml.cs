@@ -1,12 +1,16 @@
-﻿using System;
+﻿using Microsoft.Win32.TaskScheduler;
+using System;
 using System.ComponentModel;
 using System.Media;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Resources;
+using Task = System.Threading.Tasks.Task;
 
 namespace DumbDialUp
 {
@@ -30,15 +34,77 @@ namespace DumbDialUp
             InitSound();
         }
 
+
         /// <summary>
         /// Initialise the GUI
         /// </summary>
         private void InitGUI()
         {
-            // Setting the network controller will DISABLE the network connection.
+            //Check for the shift key
+            CheckForShift();
+
+            // Setting the network controller here will DISABLE the network connection.
             networkController = new NetworkController();
+
             ToggleText();
         }
+
+
+        /// <summary>
+        /// Checks if the shift key is held down
+        /// </summary>
+        private void CheckForShift()
+        {
+            if (Keyboard.IsKeyDown(Key.LeftShift))
+            {
+                // Toggle start on boot
+                string bootStatus = GetBootStatus();
+
+                MessageBox.Show(
+                    $"Start up on boot has been {bootStatus}!\n" +
+                    $"The application will now exit.",
+                    "DumbDialUp Boot Information",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Exclamation);
+
+                Application.Current.Shutdown();
+            }
+        }
+
+        /// <summary>
+        /// Enables or disables the start on boot
+        /// </summary>
+        /// <returns>ENABLED or DISABLED</returns>
+        public string GetBootStatus()
+        {
+            Microsoft.Win32.TaskScheduler.Task task =
+                TaskService.Instance.GetTask("DumbDialUp");
+
+            if (task == null)
+            {
+                // Task doesn't exist so create it
+                TaskService ts = new TaskService();
+                TaskDefinition td = ts.NewTask();
+                // Get the EXE path
+                ExecAction exe = new ExecAction(Assembly.GetExecutingAssembly().Location);
+                td.Actions.Add(exe);
+                // Run as an admin
+                td.Principal.RunLevel = TaskRunLevel.Highest;
+                // Task description
+                td.RegistrationInfo.Description = "Launches DumbDialUp at logon";
+                // Start at logon of user
+                td.Triggers.AddNew(TaskTriggerType.Logon);
+                // Create the task and enable it
+                task = ts.RootFolder.RegisterTaskDefinition("DumbDialUp", td);
+                task.Enabled = true;
+                return "ENABLED";
+            }
+            else {
+                TaskService.Instance.RootFolder.DeleteTask(task.Name);
+                return "DISABLED";
+            }
+        }
+
 
         /// <summary>
         /// Start the famous dialup sounds
@@ -126,9 +192,7 @@ namespace DumbDialUp
             SetWindowLong(hwnd, GWL_STYLE, GetWindowLong(hwnd, GWL_STYLE) & ~WS_SYSMENU);
         }
 
-
         // Window close button stuff
-
         [DllImport("user32.dll", SetLastError = true)]
         private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
         [DllImport("user32.dll")]
