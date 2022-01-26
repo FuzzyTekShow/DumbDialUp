@@ -1,11 +1,10 @@
 # DumbDialUp
 
 Do you miss the nostalgia of beep boop beep boop cshhhhhh bzzzz bing bing crrrrrrrr dial-up?  
-
-[![DumbDialUp](https://img.youtube.com/vi/J32vH44ki1I/0.jpg)](https://www.youtube.com/watch?v=J32vH44ki1I)
-(Click the above image to see the YouTube video)
-
 Well now you don't have to!  
+
+[![DumbDialUp](https://img.youtube.com/vi/J32vH44ki1I/0.jpg)](https://www.youtube.com/watch?v=J32vH44ki1I)  
+(Click the above image to see the YouTube video)
 
 ## What?
 When run, *DumbDialUp* will disable your internet connection until it has finished "dialing up".  
