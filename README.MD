@@ -2,7 +2,8 @@
 
 Do you miss the nostalgia of beep boop beep boop cshhhhhh bzzzz bing bing crrrrrrrr dial-up?  
 
-![DumbDialUp](ddup.png)
+[![DumbDialUp](https://img.youtube.com/vi/J32vH44ki1I/0.jpg)](https://www.youtube.com/watch?v=J32vH44ki1I)
+(Click the above image to see the YouTube video)
 
 Well now you don't have to!  
 

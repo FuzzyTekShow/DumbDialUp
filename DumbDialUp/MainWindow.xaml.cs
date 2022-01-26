@@ -44,7 +44,7 @@ namespace DumbDialUp
             CheckForShift();
 
             // Setting the network controller here will DISABLE the network connection.
-            networkController = new NetworkController();
+            //networkController = new NetworkController();
 
             ToggleText();
         }
